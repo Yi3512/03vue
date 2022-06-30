@@ -2,9 +2,13 @@
   <div class="wrap">
     <div class="nav_left" id="navLeft">
       <div class="nav_content">
-        <span class="active" v-for="item in arr" :key="item.first_id">{{
-          item.first_name
-        }}</span>
+        <span
+          :class="{ active: item.first_id === cerr }"
+          v-for="item in arr"
+          :key="item.first_id"
+          @click="btn(item.first_id)"
+          >{{ item.first_name }}</span
+        >
       </div>
     </div>
     <div class="down">
@@ -103,7 +107,13 @@ export default {
           first_name: '\u5b9a\u5236',
         },
       ],
+      cerr: 0,
     };
+  },
+  methods: {
+    btn(id) {
+      this.cerr = id;
+    },
   },
 };
 </script>
