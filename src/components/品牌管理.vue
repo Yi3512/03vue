@@ -1,126 +1,104 @@
 <template>
   <div id="app">
-    <div class="container">
-      <!-- 顶部框模块 -->
-      <div class="form-group">
-        <div class="input-group">
-          <h4>品牌管理</h4>
-        </div>
-      </div>
-
-      <!-- 数据表格 -->
-      <table class="table table-bordered table-hover mt-2">
-        <thead>
-          <tr>
-            <th>编号</th>
-            <th>资产名称</th>
-            <th>价格</th>
-            <th>创建时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in list" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-
-            <!-- 如果价格超过100，就有red这个类 -->
-            <td :class="{ red: item.price > 100 }">{{ item.price }}</td>
-            <td>{{ item.time }}</td>
-            <td><a href="#" @click="del(id)">删除</a></td>
-          </tr>
-          <!-- <tr style="background-color: #EEE">
-              <td>统计:</td>
-              <td colspan="2">总价钱为: 0</td>
-              <td colspan="2">平均价: 0</td>
-          </tr> -->
-        </tbody>
-        <!-- 
-        <tfoot >
-          <tr>
-            <td colspan="5" style="text-align: center">暂无数据</td>
-          </tr>
-        </tfoot>
-            -->
+    <div>
+      <span>姓名:</span>
+      <input type="text" v-model.trim="name" placeholder="请输入姓名" />
+    </div>
+    <div>
+      <span>年龄:</span>
+      <input type="number" v-model.number="age" placeholder="'请输入年龄" />
+    </div>
+    <div>
+      <span>性别:</span>
+      <select v-model="sex">
+        <option value="男">男</option>
+        <option value="女">女</option>
+      </select>
+    </div>
+    <div>
+      <button @click="btn">添加/修改</button>
+    </div>
+    <div>
+      <table border="1" cellpadding="10" cellspacing="0">
+        <tr>
+          <th>序号</th>
+          <th>姓名</th>
+          <th>年龄</th>
+          <th>性别</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="item in arr" :key="item.id">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.age }}</td>
+          <td>{{ item.sex }}</td>
+          <td>
+            <button @click="del(item.id)">删除</button>
+            <button @click="change(item.id)">编辑</button>
+          </td>
+        </tr>
       </table>
-
-      <!-- 添加资产 -->
-      <form class="form-inline" style="display: flex">
-        <div class="form-group">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="资产名称"
-              v-model="name"
-            />
-          </div>
-        </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <div class="form-group">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="价格"
-              v-model="price"
-            />
-          </div>
-        </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <!-- 阻止表单提交 -->
-        <button class="btn btn-primary" @click.prevent="addFn">添加资产</button>
-      </form>
     </div>
   </div>
 </template>
-
 <script>
-// 1. 明确需求
-// 2. 标签+样式+默认数据
-// 3. 下载bootstrap, main.js引入bootstrap.css
-// 4. 把list数组 - 铺设表格
-// 5. 修改价格颜色
 export default {
   data() {
     return {
-      name: '',
-      price: 0,
-      list: [
-        { id: 100, name: '外套', price: 199, time: new Date('2010-08-12') },
-        { id: 101, name: '裤子', price: 34, time: new Date('2013-09-01') },
-        { id: 102, name: '鞋', price: 25.4, time: new Date('2018-11-22') },
-        { id: 103, name: '头发', price: 19900, time: new Date('2020-12-12') },
+      arr: [
+        {
+          id: 100,
+          name: 'Tom',
+          age: 19,
+          sex: '男',
+        },
+        {
+          id: 101,
+          name: 'Som',
+          age: 18,
+          sex: '女',
+        },
+        {
+          id: 102,
+          name: 'Tmw',
+          age: 15,
+          sex: '男',
+        },
       ],
+      name: '',
+      age: '',
+      sex: '男',
     };
   },
   methods: {
-    addFn() {
-      if (this.name.trim().length == 0 || this.price == 0) {
-        this.name = '';
-        this.price = 0;
-        return alert('请输入完整内容');
+    btn() {
+      //判断输入框有没有值
+      if (this.name == '' || this.age == '') {
+        return alert('请输入完整的信息');
       }
-      this.list.push({
-        id: this.list[this.list.length - 1].id + 1,
+
+      this.arr.push({
+        id: this.arr[this.arr.length - 1]
+          ? this.arr[this.arr.length - 1].id + 1
+          : 100,
         name: this.name,
-        price: this.price,
-        time: new Date(),
+        age: this.age,
+        sex: this.sex,
       });
       this.name = '';
-      this.price = 0;
+      this.age = 0;
+      this.sex = '男';
+    },
+    change(id) {
+      let index = this.arr.findIndex((obj) => obj.id === id);
+      this.name = this.arr[index].name;
+      this.age = this.arr[index].age;
+      this.sex = this.arr[index].sex;
     },
     del(id) {
-      let index = this.list.findIndex((obj) => obj.id === id)
-      console.log(index);
-      this.list.splice(index, 1);
+      let index = this.arr.findIndex((obj) => obj.id === id);
+      this.arr.splice(index, 1);
     },
   },
 };
 </script>
-
-<style>
-.red {
-  color: red;
-}
-</style>

@@ -2,11 +2,11 @@
   <div id="app">
     <div>
       <span>姓名:</span>
-      <input type="text" v-model.trim="uname" />
+      <input type="text" v-model.trim="name" placeholder="请输入姓名" />
     </div>
     <div>
       <span>年龄:</span>
-      <input type="number" v-model.number="age1" />
+      <input type="number" v-model.number="age" placeholder="'请输入年龄" />
     </div>
     <div>
       <span>性别:</span>
@@ -27,14 +27,14 @@
           <th>性别</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item, index) in arr" :key="item.id">
-          <td>{{ index + 1 }}</td>
+        <tr v-for="item in arr" :key="item.id">
+          <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.age }}</td>
           <td>{{ item.sex }}</td>
           <td>
-            <button @click="del">删除</button>
-            <button @click="change(index)">编辑</button>
+            <button @click="del(item.id)">删除</button>
+            <button @click="change(item.id)">编辑</button>
           </td>
         </tr>
       </table>
@@ -47,47 +47,57 @@ export default {
     return {
       arr: [
         {
-          id: 1,
+          id: 100,
           name: 'Tom',
           age: 19,
           sex: '男',
         },
         {
-          id: 2,
+          id: 101,
           name: 'Som',
           age: 18,
           sex: '女',
         },
         {
-          id: 3,
+          id: 102,
           name: 'Tmw',
           age: 15,
           sex: '男',
         },
       ],
-      uname: '',
-      age1: 0,
+      name: '',
+      age: '',
       sex: '男',
     };
   },
   methods: {
     btn() {
       //判断输入框有没有值
-      if (this.uname.length === 0 || this.age1.length === 0) {
+      if (this.name == '' || this.age == '') {
         return alert('请输入完整的信息');
       }
 
       this.arr.push({
-        // id: this.arr[this.arr.length - 1].id + 1,
-        name: this.uname,
-        age: this.age1,
+        id: this.arr[this.arr.length - 1]
+          ? this.arr[this.arr.length - 1].id + 1
+          : 100,
+        name: this.name,
+        age: this.age,
         sex: this.sex,
       });
-      this.uname = '';
-      this.age1 = 0;
+      this.name = '';
+      this.age = 0;
+      this.sex = '男';
     },
-    change(index) {
-      this.uname = this.arr[index].uname;
+    change(id) {
+      let index = this.arr.findIndex((obj) => obj.id === id);
+      this.name = this.arr[index].name;
+      this.age = this.arr[index].age;
+      this.sex = this.arr[index].sex;
+    },
+    del(id) {
+      let index = this.arr.findIndex((obj) => obj.id === id);
+      this.arr.splice(index, 1);
     },
   },
 };
